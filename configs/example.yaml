@@ -1,0 +1,143 @@
+# example config for CuNeRF
+
+# training
+max_iter : 20000
+eval_iter: 5000
+#eval_iter: 100
+save_iter: $eval_iter
+log_iter : 100
+bs_train : 1024 
+# batch size 
+bs_eval  : 32768 
+
+bs_test  : $bs_eval
+N_eval   : 256
+lr       : 0.0005
+lr_final : 0.000005
+workers  : 4
+
+# modeling
+stype     : cube
+radius    : 1
+n_samples : 8
+
+n_imps    : 8
+mtype     : NeRFMLP
+
+# test
+zpos      : [0]
+scales    : [1]
+angles    : [0]
+asteps    : 45
+axis      : [0, 1, 1]
+cam_scale : 1.5
+
+# path
+result_path : ./save
+save_path   : ./save
+log_path    : ./save
+
+loss : 
+  name : Adaptive_MSE_LOSS
+
+sampling : 
+  stype     : $stype
+  n_samples : $n_samples
+
+rendering :
+  stype : $stype
+
+importance :
+  stype     : $stype
+  n_samples : $n_imps
+
+model : 
+  name    : $mtype
+  netD    : 8
+  netW    : 256
+  in_ch   : 3
+  out_ch  : 2
+  skips   : [4]
+  max_freq: 10
+  p_fns   : ['sin', 'cos']
+
+model_ft : 
+  name    : $mtype
+  netD    : 8
+  netW    : 256
+  in_ch   : 3
+  out_ch  : 1
+  skips   : [4]
+  max_freq: 10
+  p_fns   : ['sin', 'cos']
+
+
+dataset : 
+  mode : $mode
+  dname: Medical3D
+  train : 
+    file    : $file
+    scale   : $scale
+    radius  : $radius
+    bsize   : $bs_train
+    modality: $modality 
+    #generator: torch.Generator(device='cuda')
+
+  eval :
+    file    : $file
+    scale   : $scale
+    radius  : $radius
+    N_eval  : $N_eval
+    bsize   : $bs_eval
+    modality: $modality
+    #'generator': torch.Generator(device='cuda')
+
+  test :
+    file      : $file
+    scales    : $scales
+    radius    : $radius
+    axis      : $axis
+    angles    : $angles
+    zpos      : $zpos
+    cam_scale : $cam_scale
+    asteps    : $asteps
+
+dataloader :
+  mode : $mode
+  train :
+    batch_size : 1
+    shuffle : True
+    #generator : torch.Generator(device='cuda')
+  
+  eval:
+    batch_size : 1
+    shuffle : False
+    #generator : torch.Generator(device='cuda')
+
+  test:
+    batch_size : 1
+    shuffle : False
+    #generator : torch.Generator(device='cuda')
+
+optim :
+  name : Adam
+  lr   : $lr
+  betas: [0.9, 0.999]
+  eps  : 0.000001
+
+metrics : 
+  psnr  : True
+  ssim  : True
+  lpips : False
+  avg   : False
+
+lr_decay : 
+  lr_init        : $lr
+  lr_final       : $lr_final
+  max_iter       : $max_iter
+  lr_delay_steps : 1000
+  lr_delay_mult  : 0.01
+
+clip_grad :
+  max_val  : 0.1
+  max_norm : 0.1
