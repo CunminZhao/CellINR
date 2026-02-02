@@ -10,7 +10,7 @@
 
 ### Dataset
 You can refer to the following links to download the datasets of our collected dataset in 
-[figshare](https://drive.google.com/file/d/1zlPE-U97VnFDuS7vnrXZpY55ckxm8A3B/view?usp=drive_link).
+[Google Drive](https://drive.google.com/file/d/1zlPE-U97VnFDuS7vnrXZpY55ckxm8A3B/view?usp=drive_link).
 
 ### Training  
 ```
